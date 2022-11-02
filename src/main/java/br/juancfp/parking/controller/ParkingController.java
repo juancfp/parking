@@ -20,7 +20,7 @@ public class ParkingController {
         this.parkingService = parkingService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<ParkingDTO> findAll(){
         return parkingService.findAll();
     }

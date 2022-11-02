@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Classe OK - Finalizada (02-11-2022)
 @Component
 public class ParkingMapper {
     private static final ModelMapper MODEL_MAPPER = new ModelMapper();
