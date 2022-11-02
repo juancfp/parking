@@ -1,6 +1,7 @@
 package br.juancfp.parking.service;
 
 import br.juancfp.parking.dto.ParkingDTO;
+import br.juancfp.parking.mapper.ParkingMapper;
 import br.juancfp.parking.model.Parking;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +11,16 @@ import java.util.stream.Collectors;
 @Service
 public class ParkingService {
 
-
+    private final ParkingMapper parkingMapper;
+    public ParkingService(ParkingMapper parkingMapper){
+        this.parkingMapper = parkingMapper;
+    }
     // ========= mock do banco de dados ===========
-    private static Map<String, ParkingDTO> parkingMap = new HashMap<>();
+    private static Map<String, Parking> parkingMap = new HashMap<>();
 
     static {
         var id = getUUID();
-        ParkingDTO parking = new ParkingDTO(id, "DMS-1111", "RJ", "CELTA", "PRETO");
+        Parking parking = new Parking(id, "DMS-1111", "RJ", "CELTA", "PRETO");
         parkingMap.put(id, parking);
     }
 
@@ -26,7 +30,9 @@ public class ParkingService {
     // ============================================
     public List<ParkingDTO> findAll(){
         //TODO conexão com banco de dados
+        List<Parking> pk = parkingMap.values().stream().collect(Collectors.toList());
+        List<ParkingDTO> result = parkingMapper.toParkingDTOList(pk);
 
-        return parkingMap.values().stream().collect(Collectors.toList());
+        return result;
     }
 }
