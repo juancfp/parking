@@ -11,5 +11,8 @@ import java.util.List;
 @RequestMapping("/")
 public class HelloController {
 
-
+    @GetMapping
+    public String getMapping(){
+        return "Oi Devs.";
+    }
 }
