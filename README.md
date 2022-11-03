@@ -1,3 +1,8 @@
+![](https://img.shields.io/badge/Validation-ongoing-yellow)
+![](https://img.shields.io/badge/Database-ongoing-yellow)
+![](https://img.shields.io/badge/Documentation-ongoing-yellow)
+![](https://img.shields.io/badge/Security-ongoing-yellow)
+![](https://img.shields.io/badge/Infra-Heroku-blueviolet)
 # API REST para Gerenciar um estacionamento
 
 ## Introdução
