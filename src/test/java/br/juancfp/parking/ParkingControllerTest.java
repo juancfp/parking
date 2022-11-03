@@ -3,37 +3,33 @@ package br.juancfp.parking;
 import br.juancfp.parking.controller.ParkingController;
 import br.juancfp.parking.dto.ParkingDTO;
 import br.juancfp.parking.service.ParkingService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingControllerTest {
 
     private static final String PARKING_API_URI = "/parking";
     private static final String VALID_UUID = UUID.randomUUID().toString();
+    private static final String INVALID_UUID = UUID.randomUUID().toString();
 
 
 
@@ -41,7 +37,7 @@ public class ParkingControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    
+
     @Mock
     private ParkingService parkingService;
 
@@ -55,6 +51,8 @@ public class ParkingControllerTest {
 
     // TODO CRUD tests
     // (OK)    -     READ : GET sem argumentos (todos) -> returns ok
+    // (OK)    -     READ : GET com argumento id -> returns ok
+    // (OK)    -     READ : GET com argumento id -> returns not found
 
 
 
@@ -73,6 +71,40 @@ public class ParkingControllerTest {
                 contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(resultList))
                 ).andExpect(status().isOk());
+
+    }
+
+    @Test
+    void whenGETIsCalledWithWrongArgumentsThenNotFoundIsReturned() throws Exception {
+        //given
+        ParkingDTO invalidResult = new ParkingDTO(INVALID_UUID,
+                "ABC-0101", "RJ", "CORSA", "CINZA");
+        // when
+        when(parkingService.findById(INVALID_UUID)).thenReturn(Optional.empty());
+
+
+        //then
+        mockMvc.perform(get(PARKING_API_URI+"/"+INVALID_UUID).
+                contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidResult))
+        ).andExpect(status().isNotFound());
+
+    }
+    @Test
+    void whenGETIsCalledWithArgumentsThenAOkStatusIsReturned() throws Exception {
+        //given
+
+        ParkingDTO result = new ParkingDTO(VALID_UUID, "ABC-0101", "RJ", "CORSA", "CINZA");
+        // when
+
+        when(parkingService.findById(VALID_UUID)).thenReturn(Optional.of(result));
+
+
+        //then
+        mockMvc.perform(get(PARKING_API_URI+"/"+VALID_UUID).
+                contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(result))
+        ).andExpect(status().isOk());
 
     }
 

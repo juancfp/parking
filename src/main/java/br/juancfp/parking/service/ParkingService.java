@@ -22,6 +22,9 @@ public class ParkingService {
         var id = getUUID();
         Parking parking = new Parking(id, "DMS-1111", "RJ", "CELTA", "PRETO");
         parkingMap.put(id, parking);
+        id = getUUID();
+        Parking parking2 = new Parking(id, "WAP-1211", "RJ", "TORO", "AZUL");
+        parkingMap.put(id, parking2);
     }
 
     private static String getUUID(){
@@ -34,5 +37,15 @@ public class ParkingService {
         List<ParkingDTO> result = parkingMapper.toParkingDTOList(pk);
 
         return result;
+    }
+
+    public Optional<ParkingDTO> findById(String id) {
+
+        var result = parkingMap.get(id);
+        ParkingDTO resultDTO = null;
+        if(result!=null){
+            resultDTO = parkingMapper.toParkingDTO(result);
+        }
+        return Optional.ofNullable(resultDTO);
     }
 }
