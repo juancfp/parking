@@ -1,7 +1,9 @@
 package br.juancfp.parking;
 
 import br.juancfp.parking.controller.ParkingController;
+import br.juancfp.parking.dto.ParkingCreateDTO;
 import br.juancfp.parking.dto.ParkingDTO;
+import br.juancfp.parking.mapper.ParkingMapper;
 import br.juancfp.parking.service.ParkingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -20,8 +21,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,11 +36,15 @@ public class ParkingControllerTest {
 
 
 
+
     private MockMvc mockMvc;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
+
+    @Mock
+    private ParkingMapper parkingMapper;
     @Mock
     private ParkingService parkingService;
 
@@ -53,6 +60,9 @@ public class ParkingControllerTest {
     // (OK)    -     READ : GET sem argumentos (todos) -> returns ok
     // (OK)    -     READ : GET com argumento id -> returns ok
     // (OK)    -     READ : GET com argumento id -> returns not found
+    //         -     CREATE : POST sem argumentos necessarios -> bad request 400
+    //         -     CREATE : POST com argumentos necessarios -> created 201
+
 
 
 
@@ -108,4 +118,21 @@ public class ParkingControllerTest {
 
     }
 
+    @Test
+    void whenPOSTIsCalledThenACreatedStatusIsReturned() throws Exception{
+        //given
+        ParkingDTO parkingDTO = new ParkingDTO(VALID_UUID, " ", "", "", "");
+
+        //when
+        when(parkingService.create(isA(ParkingCreateDTO.class))).thenReturn(Optional.ofNullable(parkingDTO));
+
+        //then
+        mockMvc.perform(post(PARKING_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+        ).andExpect(status().isCreated());
+
+    }
 }
+
+

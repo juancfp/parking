@@ -34,10 +34,9 @@ public class ParkingService {
 
     // temporário
     private ParkingDTO createParking(ParkingCreateDTO parkingCreateDTO){
-        var id = getUUID();
+
         Parking parking = parkingMapper.toParkingFromCreate(parkingCreateDTO);
-        parking.setId(id);
-        parkingMap.put(id, parking);
+        parkingMap.put(parking.getId(), parking);
         return parkingMapper.toParkingDTO(parking);
     }
     // ============================================

@@ -41,6 +41,7 @@ public class ParkingController {
     @ApiOperation("Create new parking")
     public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO dto){
 
+
         return new ResponseEntity(parkingService.create(dto), HttpStatus.CREATED);
     }
 }
