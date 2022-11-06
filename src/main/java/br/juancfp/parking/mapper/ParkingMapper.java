@@ -1,5 +1,6 @@
 package br.juancfp.parking.mapper;
 
+import br.juancfp.parking.dto.ParkingCreateDTO;
 import br.juancfp.parking.dto.ParkingDTO;
 import br.juancfp.parking.model.Parking;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,14 @@ public class ParkingMapper {
 
     public ParkingDTO toParkingDTO(Parking parking){
         return MODEL_MAPPER.map(parking, ParkingDTO.class);
+    }
+
+    // temporário (até criar o módulo de persistencia)
+    public Parking toParking(ParkingDTO parkingDTO){
+        return MODEL_MAPPER.map(parkingDTO, Parking.class);
+    }
+    public Parking toParkingFromCreate(ParkingCreateDTO parkingCreateDTO){
+        return MODEL_MAPPER.map(parkingCreateDTO, Parking.class);
     }
 
     public List<ParkingDTO> toParkingDTOList(List<Parking> parking){

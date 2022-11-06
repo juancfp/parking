@@ -1,5 +1,6 @@
 package br.juancfp.parking.service;
 
+import br.juancfp.parking.dto.ParkingCreateDTO;
 import br.juancfp.parking.dto.ParkingDTO;
 import br.juancfp.parking.mapper.ParkingMapper;
 import br.juancfp.parking.model.Parking;
@@ -30,6 +31,15 @@ public class ParkingService {
     private static String getUUID(){
         return UUID.randomUUID().toString().replace("-", "");
     }
+
+    // temporário
+    private ParkingDTO createParking(ParkingCreateDTO parkingCreateDTO){
+        var id = getUUID();
+        Parking parking = parkingMapper.toParkingFromCreate(parkingCreateDTO);
+        parking.setId(id);
+        parkingMap.put(id, parking);
+        return parkingMapper.toParkingDTO(parking);
+    }
     // ============================================
     public List<ParkingDTO> findAll(){
         //TODO conexão com banco de dados
@@ -47,5 +57,10 @@ public class ParkingService {
             resultDTO = parkingMapper.toParkingDTO(result);
         }
         return Optional.ofNullable(resultDTO);
+    }
+
+    public Optional<ParkingDTO> create(ParkingCreateDTO createDTO) {
+        ParkingDTO dto = createParking(createDTO);
+        return Optional.of(dto);
     }
 }
